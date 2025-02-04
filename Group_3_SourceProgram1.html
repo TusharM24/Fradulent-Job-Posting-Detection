@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraudulent Job Posting Detection Portal</title>
+    <style>
+     
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        margin: 0;
+        padding: 0; 
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; 
+        background-color: white;
+        overflow-y: auto; 
+    }
+    .form-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 1000px; 
+        margin-top: 20px; 
+    }
+    .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px; 
+    }    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .form-group textarea {
+        resize: none;
+    }
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .button-group button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+    }
+    .submit-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .submit-button button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+    }
+    </style>
+   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+</head>
+<body>
+        <div class="form-container">
+                <h1>Fraudulent Job Posting Detection Portal</h1>
+                <form action="/predict" method="get">
+                    <div class="form-group">
+                        <label for="job-title">Job Title</label>
+                        <input type="text" id="job-title" name="job_title" placeholder="Enter Job Title" required>
+                    </div>
+        <div class="form-group">
+            <label for="job-description">Job Description</label>
+            <textarea id="job-description" name="job-description" rows="3" placeholder="Enter Job Description"></textarea>
+        </div>
+        
+        <div class="form-groups">
+            <label for="salary-range">Salary Range</label>
+            <select id="salary-range" name="salary-range">
+                <option value="" selected>Select Salary Range</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="job-location">Job Location</label>
+            <select id="job-location" name="job-location">
+                <option value="" selected>Select Job Location</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="job-requirements">Job Requirements</label>
+            <textarea id="job-requirements" name="job-requirements" rows="3" placeholder="Enter Job Requirements"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="department">Department</label>
+            <select id="department" name="department">
+                <option value="" selected>Select Department</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="company-profile">Company Profile</label>
+            <textarea id="company-profile" name="company-profile" rows="3" placeholder="Enter Company Profile"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="benefits">Benefits</label>
+            <textarea id="benefits" name="benefits" rows="3" placeholder="Enter Benefits"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="required-education">Required Education</label>
+            <select id="required-education" name="required-education">
+                <option value="" selected>Select Education Level</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="required-experience">Required Experience</label>
+            <select id="required-experience" name="required-experience">
+                <option value="" selected>Select Required Experience</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="industry">What industry does the company belong to?</label>
+            <select id="industry" name="industry">
+                <option value="" selected>Select Industry</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="domain">What domain the job is in?</label>
+            <select id="domain" name="domain">
+                <option value="" selected>Select the Domain</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="employment-type">Employment Type</label>
+            <select id="employment-type" name="employment-type">
+                <option value="" selected>Select Employment Type</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="telecommuting">Does the company have telecommuting positions?</label>
+            <select id="telecommuting" name="telecommuting">
+                <option value="" selected>Select Option</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="logo">Does the company have a logo?</label>
+            <select id="logo" name="logo">
+                <option value="" selected>Select Option</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="screening-questions">Does the company have screening questions?</label>
+            <select id="screening-questions" name="screening-questions">
+                <option value="" selected>Select Option</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+        </div>
+        <div>
+            <label for="model_type">Select Model</label>
+            <select id="model_type" name="model_type">
+                <option value="randomforest">RandomForest</option>
+                <option value="xgboost">XGBoost</option>
+            </select>
+        </div>
+        <div class="submit-button">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_locations.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#job-location');
+                data.forEach(function (location) {
+                    select.append(new Option(location, location));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded locations data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_salary_range.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#salary-range');
+                data.forEach(function (salary) {
+                    select.append(new Option(salary, salary));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded salary data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_department.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#department');
+                data.forEach(function (department) {
+                    select.append(new Option(department, department));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded department data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_education.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#required-education');
+                data.forEach(function (education) {
+                    select.append(new Option(education, education));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded education data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_experience.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#required-experience');
+                data.forEach(function (experience) {
+                    select.append(new Option(experience, experience));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded experience data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_industry.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#industry');
+                data.forEach(function (industry) {
+                    select.append(new Option(industry, industry));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded industry data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_domain.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#domain');
+                data.forEach(function (domain) {
+                    select.append(new Option(domain, domain));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded domain data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $.getJSON('static/unique_employment_type.json', function (data) {
+            console.log("data: " + data);
+            if (Array.isArray(data)) {
+                var select = $('#employment-type');
+                data.forEach(function (employment) {
+                    select.append(new Option(employment, employment));
+                });
+                select.select2();
+            } else {
+                console.error("Failed to load data");
+            }
+        })
+        .done(function () {
+            console.log("Loaded employment data");
+        })
+        .fail(function () {
+            console.error("Failed to load data");
+        });
+    });
+</script>
+</body>
+</html> 
