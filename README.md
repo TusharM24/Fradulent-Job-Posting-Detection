@@ -1,6 +1,7 @@
 # Fradulent-Job-Posting-Detection
 A project that integrates Machine Learning and Natural Language Processing to analyze job postings and determine their authenticity. By evaluating textual data and key parameters, the system identifies fraudulent job listings while providing a user-friendly interface for a user to input the data.
 Below is the overview of the code files
+
 Frontend
 1.Group3_Source_program1.html – Contains the frontend code for the application, responsible for user interaction and input submission.
 
