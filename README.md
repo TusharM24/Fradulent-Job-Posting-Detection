@@ -9,6 +9,7 @@ Frontend:
 Backend:
 
 1.app.py – A Flask-based backend that processes input from the frontend, feeds it into the trained machine learning model, and returns predictions.
+
 2.Preprocessing_P – Implements the preprocessing pipeline and machine learning models for data transformation and prediction.
 
 Data Analysis and Model Training:
@@ -18,4 +19,5 @@ Data Analysis and Model Training:
 Reports and Documentation:
 
 1.Data_Mining_Final_Report.pdf – Comprehensive documentation of the project, including methodology, findings, and conclusions.
+
 2.data_mining_presentation.pptx – Presentation summarizing the key aspects of data mining, model development, and evaluation.
