@@ -1,6 +1,14 @@
-# Fraudulent Job Posting Detection
+# 🛡️ Fraudulent Job Posting Detection
 
 A machine learning web application that detects fraudulent job postings using XGBoost.
+
+## 🚀 Live Demo
+
+**[Try the App →](https://fradulent-job-posting-detection.onrender.com)**
+
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://fradulent-job-posting-detection.onrender.com)
+
+---
 
 ## Project Structure
 
@@ -22,10 +30,10 @@ A machine learning web application that detects fraudulent job postings using XG
 │   └── ...
 ├── data/                       # Raw dataset
 │   └── fake_job_postings 2.csv
-└── vercel.json                 # Vercel deployment config
+└── vercel.json                 # Deployment config
 ```
 
-## Features
+## ✨ Features
 
 - **Machine Learning Model**: XGBoost classifier trained on 17,880 job postings
 - **Preprocessing Pipeline**: Automated feature engineering including:
@@ -36,11 +44,11 @@ A machine learning web application that detects fraudulent job postings using XG
 - **Web Interface**: User-friendly form with searchable dropdowns
 - **Real-time Prediction**: Instant fraud probability assessment
 
-## Installation
+## 🛠️ Installation (Local Development)
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/TusharM24/Fradulent-Job-Posting-Detection.git
 cd Fradulent-Job-Posting-Detection
 ```
 
@@ -62,14 +70,16 @@ python app.py
 
 5. Open http://localhost:5000 in your browser
 
-## Model Performance
+## 📊 Model Performance
 
-- **Algorithm**: XGBoost (optimized for Recall)
-- **Primary Metric**: Recall (to minimize missed fraud cases)
-- **Training**: 5-fold Stratified Cross-Validation
-- **Class Balancing**: SMOTE applied to training data
+| Metric | Description |
+|--------|-------------|
+| **Algorithm** | XGBoost (optimized for Recall) |
+| **Primary Metric** | Recall (to minimize missed fraud cases) |
+| **Training** | 5-fold Stratified Cross-Validation |
+| **Class Balancing** | SMOTE applied to training data |
 
-## Input Fields
+## 📝 Input Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -92,13 +102,14 @@ python app.py
 | Has Company Logo | Yes/No | Logo present in posting |
 | Has Screening Questions | Yes/No | Application questions |
 
-## Technology Stack
+## 🔧 Technology Stack
 
 - **Backend**: Flask (Python)
-- **ML Libraries**: scikit-learn, XGBoost, LightGBM
+- **ML Libraries**: scikit-learn, XGBoost
 - **Frontend**: HTML5, CSS3, JavaScript, jQuery, Select2
 - **Data Processing**: pandas, numpy
+- **Deployment**: Render
 
-## License
+## 📄 License
 
 MIT License
