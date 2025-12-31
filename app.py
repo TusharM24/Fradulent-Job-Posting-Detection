@@ -627,9 +627,12 @@ if __name__ == '__main__':
     print(f"Model loaded: {'Yes' if model else 'No'}")
     print("="*50 + "\n")
     
-    # Try port 5000, then 5001 if busy
-    try:
-        app.run(debug=True, port=5000)
-    except OSError:
-        print("Port 5000 busy, trying 5001...")
-        app.run(debug=True, port=5001)
+    # Get port from environment variable (required for Render/cloud deployment)
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Use 0.0.0.0 to bind to all interfaces (required for cloud deployment)
+    # Debug mode disabled in production
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    
+    print(f"Starting server on port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
