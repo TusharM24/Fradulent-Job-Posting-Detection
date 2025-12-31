@@ -1,0 +1,49 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Intermediate data files (generated during preprocessing)
+*.xlsx
+model_comparison.png
+
+# Old/unused files
+Preprocessing_P.py
+Group_3_SourceProgram1.html
+Data_Analysis_and_model_training.ipynb
+extract_categories.py
+
+# Keep these (do NOT ignore):
+# - app.py
+# - requirements.txt
+# - templates/
+# - categories/
+# - data/
+# - preprocessing_pipeline.pkl
+# - best_model.pkl
+# - new.ipynb
+# - vercel.json

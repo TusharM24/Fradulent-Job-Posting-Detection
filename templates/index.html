@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraudulent Job Posting Detection</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            font-family: inherit;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #ffffff;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .info-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .location-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .location-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        /* Select2 styling to match form design */
+        .select2-container--default .select2-selection--single {
+            height: 44px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            background-color: #ffffff;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 30px;
+            padding-left: 0;
+            color: #333;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 42px;
+            right: 10px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #667eea;
+            background-color: #ffffff;
+        }
+
+        .select2-dropdown {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+
+        .select2-results__option {
+            color: #333;
+            padding: 8px 12px;
+        }
+
+        .select2-results__option--highlighted {
+            background-color: #667eea;
+            color: #ffffff;
+        }
+
+        .select2-results__option[aria-selected="true"] {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 6px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .note-box {
+            background: #e8f4fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .note-box p {
+            margin: 0;
+            color: #333;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Fraudulent Job Posting Detection</h1>
+            <p>Enter job posting details to verify authenticity</p>
+        </div>
+
+        <div class="form-container">
+            <div class="note-box">
+                <p>💡 <strong>Tip:</strong> Leave fields as "Unknown" if information is not available. The model works best with complete information.</p>
+            </div>
+
+            <form action="/predict" method="POST">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <div class="form-section-title">Basic Information</div>
+                    
+                    <div class="form-group">
+                        <label for="job_title">Job Title <span class="required">*</span></label>
+                        <input type="text" id="job_title" name="job_title" placeholder="e.g., Software Engineer" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="job-description">Job Description</label>
+                        <textarea id="job-description" name="job-description" placeholder="Enter detailed job description (leave empty if not available)"></textarea>
+                        <p class="info-text">Leave empty if not available - will be treated as 'Unknown'</p>
+                    </div>
+
+                    <!-- Location Section - Split into Country, State, City -->
+                    <div class="location-section">
+                        <h4>📍 Location Details</h4>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country" name="country" class="category-select">
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="state">State/Region</label>
+                                <select id="state" name="state" class="category-select">
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="Enter city name">
+                                <p class="info-text">Leave empty if not available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salary-range">Salary Range</label>
+                        <select id="salary-range" name="salary-range" class="category-select">
+                            <option value="Unknown">Unknown</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Company Details -->
+                <div class="form-section">
+                    <div class="form-section-title">Company Details</div>
+                    
+                    <div class="form-group">
+                        <label for="company-profile">Company Profile</label>
+                        <textarea id="company-profile" name="company-profile" placeholder="Enter company information (leave empty if not available)"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" name="department" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="industry">Industry</label>
+                            <select id="industry" name="industry" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Requirements -->
+                <div class="form-section">
+                    <div class="form-section-title">Job Requirements</div>
+                    
+                    <div class="form-group">
+                        <label for="job-requirements">Requirements</label>
+                        <textarea id="job-requirements" name="job-requirements" placeholder="Enter job requirements and qualifications (leave empty if not available)"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="required-education">Required Education</label>
+                            <select id="required-education" name="required-education" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="required-experience">Required Experience</label>
+                            <select id="required-experience" name="required-experience" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="domain">Job Function/Domain</label>
+                            <select id="domain" name="domain" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="employment-type">Employment Type</label>
+                            <select id="employment-type" name="employment-type" class="category-select">
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <div class="form-section-title">Additional Information</div>
+                    
+                    <div class="form-group">
+                        <label for="benefits">Benefits</label>
+                        <textarea id="benefits" name="benefits" placeholder="Enter benefits and perks (leave empty if not available)"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telecommuting">Telecommuting Available?</label>
+                            <select id="telecommuting" name="telecommuting">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logo">Has Company Logo?</label>
+                            <select id="logo" name="logo">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="screening-questions">Has Screening Questions?</label>
+                        <select id="screening-questions" name="screening-questions">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">🔍 Analyze Job Posting</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        // Category mapping: field ID -> API endpoint name
+        const categoryMapping = {
+            'country': 'country',
+            'state': 'state',
+            'salary-range': 'salary_range',
+            'department': 'department',
+            'industry': 'industry',
+            'required-education': 'required_education',
+            'required-experience': 'required_experience',
+            'domain': 'function',
+            'employment-type': 'employment_type'
+        };
+
+        // Load categories for a specific field
+        function loadCategories(fieldId, categoryName) {
+            $.ajax({
+                url: `/api/categories/${categoryName}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function(categories) {
+                    const $select = $(`#${fieldId}`);
+                    // Clear existing options
+                    $select.empty();
+                    
+                    // Add categories as options (Unknown should be first from API)
+                    categories.forEach(function(category) {
+                        const isUnknown = category === 'Unknown';
+                        $select.append(new Option(category, category, isUnknown, isUnknown));
+                    });
+                    
+                    // Initialize Select2 with search functionality
+                    $select.select2({
+                        placeholder: 'Select or search...',
+                        allowClear: false,
+                        width: '100%',
+                        dropdownAutoWidth: true
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(`Error loading categories for ${fieldId}:`, error);
+                    // Keep default Unknown option
+                    $(`#${fieldId}`).select2({
+                        width: '100%'
+                    });
+                }
+            });
+        }
+
+        // Initialize all category dropdowns when page loads
+        $(document).ready(function() {
+            // Load categories for all categorical fields
+            Object.keys(categoryMapping).forEach(function(fieldId) {
+                loadCategories(fieldId, categoryMapping[fieldId]);
+            });
+
+            // Initialize Select2 for Yes/No dropdowns
+            $('#telecommuting, #logo, #screening-questions').select2({
+                width: '100%',
+                minimumResultsForSearch: -1 // Disable search for small dropdowns
+            });
+        });
+    </script>
+</body>
+</html>

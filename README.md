@@ -1,23 +1,104 @@
-# Fradulent-Job-Posting-Detection
-A project that integrates Machine Learning and Natural Language Processing to analyze job postings and determine their authenticity. By evaluating textual data and key parameters, the system identifies fraudulent job listings while providing a user-friendly interface for a user to input the data.
-Below is the overview of the code files
+# Fraudulent Job Posting Detection
 
-Frontend:
+A machine learning web application that detects fraudulent job postings using XGBoost.
 
-1.Group3_Source_program1.html – Contains the frontend code for the application, responsible for user interaction and input submission.
+## Project Structure
 
-Backend:
+```
+├── app.py                      # Flask web application
+├── preprocessing_pipeline.pkl  # Trained preprocessing pipeline
+├── best_model.pkl              # Trained XGBoost model
+├── new.ipynb                   # Jupyter notebook with data analysis & model training
+├── requirements.txt            # Python dependencies
+├── templates/                  # HTML templates
+│   ├── index.html              # Main form page
+│   ├── result.html             # Prediction result page
+│   ├── 404.html                # Error page
+│   └── 500.html                # Error page
+├── categories/                 # Dropdown options for form fields
+│   ├── industry.txt
+│   ├── function.txt
+│   ├── department.txt
+│   └── ...
+├── data/                       # Raw dataset
+│   └── fake_job_postings 2.csv
+└── vercel.json                 # Vercel deployment config
+```
 
-1.app.py – A Flask-based backend that processes input from the frontend, feeds it into the trained machine learning model, and returns predictions.
+## Features
 
-2.Preprocessing_P – Implements the preprocessing pipeline and machine learning models for data transformation and prediction.
+- **Machine Learning Model**: XGBoost classifier trained on 17,880 job postings
+- **Preprocessing Pipeline**: Automated feature engineering including:
+  - Title feature extraction (11 features)
+  - Target encoding for categorical variables
+  - TF-IDF vectorization for text fields
+  - Ordinal encoding for experience/education levels
+- **Web Interface**: User-friendly form with searchable dropdowns
+- **Real-time Prediction**: Instant fraud probability assessment
 
-Data Analysis and Model Training:
+## Installation
 
-1.Data_Analysis_and_Model_Training.ipynb – A Jupyter Notebook containing data preprocessing, model training, evaluation, and statistical analysis for selecting the best-performing model.
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd Fradulent-Job-Posting-Detection
+```
 
-Reports and Documentation:
+2. Create virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-1.Data_Mining_Final_Report.pdf – Comprehensive documentation of the project, including methodology, findings, and conclusions.
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-2.data_mining_presentation.pptx – Presentation summarizing the key aspects of data mining, model development, and evaluation.
+4. Run the application:
+```bash
+python app.py
+```
+
+5. Open http://localhost:5000 in your browser
+
+## Model Performance
+
+- **Algorithm**: XGBoost (optimized for Recall)
+- **Primary Metric**: Recall (to minimize missed fraud cases)
+- **Training**: 5-fold Stratified Cross-Validation
+- **Class Balancing**: SMOTE applied to training data
+
+## Input Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Job Title | Text | Required |
+| Description | Text | Job description |
+| Company Profile | Text | About the company |
+| Requirements | Text | Job requirements |
+| Benefits | Text | Job benefits |
+| Country | Dropdown | 2-letter country code |
+| State | Dropdown | State/region code |
+| City | Text | City name |
+| Industry | Dropdown | Industry sector |
+| Function | Dropdown | Job function/domain |
+| Department | Dropdown | Department name |
+| Employment Type | Dropdown | Full-time, Part-time, etc. |
+| Salary Range | Dropdown | Salary bracket |
+| Required Experience | Dropdown | Experience level |
+| Required Education | Dropdown | Education level |
+| Telecommuting | Yes/No | Remote work available |
+| Has Company Logo | Yes/No | Logo present in posting |
+| Has Screening Questions | Yes/No | Application questions |
+
+## Technology Stack
+
+- **Backend**: Flask (Python)
+- **ML Libraries**: scikit-learn, XGBoost, LightGBM
+- **Frontend**: HTML5, CSS3, JavaScript, jQuery, Select2
+- **Data Processing**: pandas, numpy
+
+## License
+
+MIT License

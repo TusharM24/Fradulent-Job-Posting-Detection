@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - Fraudulent Job Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        {% if is_fraudulent %}
+        .result-icon {
+            color: #e74c3c;
+        }
+        .result-title {
+            color: #e74c3c;
+        }
+        .result-badge {
+            display: inline-block;
+            background: #fee;
+            color: #c33;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 2px solid #fcc;
+        }
+        {% else %}
+        .result-icon {
+            color: #27ae60;
+        }
+        .result-title {
+            color: #27ae60;
+        }
+        .result-badge {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 2px solid #c3e6cb;
+        }
+        {% endif %}
+
+        .result-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .confidence-bar {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .confidence-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .confidence-value {
+            height: 30px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .model-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #004085;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .result-container {
+                padding: 25px;
+            }
+
+            .result-title {
+                font-size: 2em;
+            }
+
+            .result-icon {
+                font-size: 4em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="result-icon">
+            {% if is_fraudulent %}
+                ⚠️
+            {% else %}
+                ✅
+            {% endif %}
+        </div>
+
+        <h1 class="result-title">{{ result_text }}</h1>
+        
+        <div class="result-badge">
+            {% if is_fraudulent %}
+                FRAUDULENT JOB POSTING DETECTED
+            {% else %}
+                LEGITIMATE JOB POSTING
+            {% endif %}
+        </div>
+
+        <div class="result-details">
+            <div class="detail-item">
+                <span class="detail-label">Job Title:</span>
+                <span class="detail-value">{{ job_title }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Department:</span>
+                <span class="detail-value">{{ department }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Location:</span>
+                <span class="detail-value">{{ location }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Model Used:</span>
+                <span class="detail-value">{{ model_name }}</span>
+            </div>
+        </div>
+
+        {% if confidence %}
+        <div class="confidence-bar">
+            <div class="confidence-label">Confidence Level</div>
+            <div class="confidence-value" style="width: {{ confidence }}%;">
+                {{ "%.1f"|format(confidence) }}%
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="model-info">
+            <strong>ℹ️ Note:</strong> This prediction is based on machine learning analysis. 
+            Always verify job postings through official channels.
+        </div>
+
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">🔍 Analyze Another Job</a>
+            <button onclick="window.print()" class="btn btn-secondary">🖨️ Print Result</button>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
